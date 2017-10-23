@@ -6,9 +6,13 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
-    this.x = 50;
-    this.y = 50;
-    this.speed = 10;
+    this.x = 0;
+    this.y = 60;              
+    this.speed = 0;
+
+    this.setSpeed = function(value) {
+        this.speed = speed;
+    };
 };
 
 // Update the enemy's position, required method for game
@@ -18,13 +22,16 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     //this.x = this.x * dt;
-    var movement = 100 * dt;    
-    this.x = this.x + movement;
-
+    var movement = this.speed * dt;    
+    if(this.x > 500) {
+        this.x = 0;
+    } else {
+        this.x = this.x + movement;    
+    }    
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function() {    
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
@@ -45,8 +52,7 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.handleInput = function(key) {
-    console.log('(' + this.x + ', ' + this.y + ')');
+Player.prototype.handleInput = function(key) {    
     if(key === 'right') { 
         if(this.x < 403)         
             this.x += 101;
@@ -59,9 +65,7 @@ Player.prototype.handleInput = function(key) {
     } else if(key == 'down') {
         if(this.y < 399) 
             this.y += 83;
-    }    
-    this.update();
-    this.render();
+        }        
 };
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -69,10 +73,15 @@ Player.prototype.handleInput = function(key) {
 var player = new Player();
 var allEnemies = [];
 
-for(var i=0; i<5; i++) {
-    allEnemies.push(new Enemy());
+var axisY = 83;
+for(var i=0; i<3; i++) {        
+    e = new Enemy();
+    var speed = (Math.floor(Math.random() * 100)) * 5;
+    e.setSpeed(speed);
+    e.y += (axisY * i);
+    
+    allEnemies.push(e);            
 }
-
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
