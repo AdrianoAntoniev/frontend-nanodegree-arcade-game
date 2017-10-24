@@ -7,10 +7,11 @@ var Enemy = function() {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.x = 0;
-    this.y = 60;              
-    this.speed = 0;
+    this.y = 68;              
+    this.speed = 0;    
+    this.sizes = {'x': 101, 'y': 171};    
 
-    this.setSpeed = function(value) {
+    this.setSpeed = function(value) {        
         this.speed = speed;
     };
 };
@@ -22,7 +23,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     //this.x = this.x * dt;
-    var movement = this.speed * dt;    
+    var movement = Math.floor(this.speed * dt);      
     if(this.x > 500) {
         this.x = 0;
     } else {
@@ -31,8 +32,8 @@ Enemy.prototype.update = function(dt) {
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {    
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+Enemy.prototype.render = function() {        
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);    
 };
 
 // Now write your own player class
@@ -42,14 +43,22 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 101;
     this.y = 400;    
+    this.prevX = this.x;
+    this.prevY = this.y;
+
+    this.sizes = {'x': 101, 'y': 171};    
 }
 
-Player.prototype.update = function() {        
+Player.prototype.resetPosition = function() {
+    this.x = this.prevX;
+    this.y = this.prevY;
+}
 
+Player.prototype.update = function() {
 }
 
 Player.prototype.render = function() {    
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);    
 };
 
 Player.prototype.handleInput = function(key) {    
@@ -76,10 +85,10 @@ var allEnemies = [];
 var axisY = 83;
 for(var i=0; i<3; i++) {        
     e = new Enemy();
-    var speed = (Math.floor(Math.random() * 100)) * 5;
+    //var speed = Math.floor(Math.random() * 30) * 20;
+    var speed = Math.floor(Math.random() * 8) * 10;
     e.setSpeed(speed);
-    e.y += (axisY * i);
-    
+    e.y += (axisY * i);    
     allEnemies.push(e);            
 }
 

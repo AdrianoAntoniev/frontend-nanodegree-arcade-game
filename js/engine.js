@@ -71,7 +71,7 @@ var Engine = (function(global) {
     /* This function is called by main (our game loop) and itself calls all
      * of the functions which may need to update entity's data. Based on how
      * you implement your collision detection (when two entities occupy the
-     * same space, for instance when your character should die), you may find
+     * same space, for instance when your character should die), you may find 
      * the need to add an additional function call here. For now, we've left
      * it commented out - you may or may not want to implement this
      * functionality this way (you could just implement collision detection
@@ -79,7 +79,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function and loops through all of the
@@ -89,8 +89,27 @@ var Engine = (function(global) {
      * the data/properties related to the object. Do your drawing in your
      * render methods.
      */
-    function updateEntities(dt) {
-        console.log('entrei na update entiies');        
+
+    function checkCollisions() {        
+        allEnemies.forEach(function(enemy) {                               
+            var isSameColumn = player.y === enemy.y;
+
+            if(isSameColumn) {
+                var isCollidedBack = player.x === enemy.x + (enemy.sizes['x']+22);                
+
+                var isCollidedFront = player.x >= enemy.x && player.x <= (enemy.x + (enemy.sizes['x']-25));
+                var isCollidedBack = player.x >= Math.abs(enemy.x - (enemy.sizes['x']-25)) && player.x <= enemy.x;
+
+                if(isCollidedBack || isCollidedFront) {
+                    player.resetPosition();
+                    console.log('back!');
+                } 
+            }     
+            
+        });
+    } 
+
+    function updateEntities(dt) {        
         allEnemies.forEach(function(enemy) {               
             enemy.update(dt);
         });
